@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+'use client'
+
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 interface ProductCardProps {
   id: string;
@@ -31,7 +33,7 @@ const ProductCard = ({ id, title, description, image, category }: ProductCardPro
         <div className="text-sm text-primary font-medium mb-2">{category}</div>
         <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">{title}</h3>
         <p className="text-muted-foreground mb-4 line-clamp-2">{description}</p>
-        <Link to={`/products/${id}`}>
+        <Link href={`/products/${id}`}>
           <Button variant="ghost" className="gap-2 px-0 group/btn">
             View Details
             <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
