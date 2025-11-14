@@ -1,63 +1,91 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { query } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 export const dynamic = 'force-dynamic'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@1000coupole.com'
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD // Pre-hashed password
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH
 
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json()
 
     console.log('Login attempt:', email)
-    console.log('Expected email:', ADMIN_EMAIL)
-    console.log('Has password hash:', !!ADMIN_PASSWORD_HASH)
+    console.log('ENV ADMIN_EMAIL:', ADMIN_EMAIL || 'Not set')
+    console.log('ENV ADMIN_PASSWORD:', ADMIN_PASSWORD ? 'Set' : 'Not set')
 
     if (!email || !password) {
       return NextResponse.json({ message: 'Email and password are required' }, { status: 400 })
     }
 
-    // Check if email matches admin email from environment variable
-    if (email !== ADMIN_EMAIL) {
-      console.log('Email mismatch')
+    // Try environment variables first (if set)
+    if (ADMIN_EMAIL && (ADMIN_PASSWORD || ADMIN_PASSWORD_HASH)) {
+      console.log('Trying ENV authentication')
+      
+      if (email === ADMIN_EMAIL) {
+        let isValidPassword = false
+        
+        if (ADMIN_PASSWORD_HASH) {
+          isValidPassword = await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
+          console.log('ENV hashed password valid:', isValidPassword)
+        } else if (ADMIN_PASSWORD) {
+          isValidPassword = password === ADMIN_PASSWORD
+          console.log('ENV plain password valid:', isValidPassword)
+        }
+        
+        if (isValidPassword) {
+          const token = jwt.sign(
+            { email: ADMIN_EMAIL, role: 'admin' },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+          )
+          
+          console.log('ENV Login successful')
+          return NextResponse.json({
+            token,
+            user: { email: ADMIN_EMAIL, role: 'admin' }
+          })
+        }
+      }
+    }
+
+    // Fallback to database authentication
+    console.log('Trying database authentication')
+    const users: any = await query(
+      'SELECT * FROM users WHERE email = ? AND role = ?',
+      [email, 'admin']
+    )
+
+    if (users.length === 0) {
+      console.log('User not found in database')
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 })
     }
 
-    // Verify password
-    let isValidPassword = false
-    
-    if (ADMIN_PASSWORD_HASH) {
-      // Use pre-hashed password from environment variable
-      isValidPassword = await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
-      console.log('Using hashed password, valid:', isValidPassword)
-    } else {
-      // Fallback: allow plain password for development (NOT RECOMMENDED FOR PRODUCTION)
-      const fallbackPassword = process.env.ADMIN_PASSWORD || 'admin123'
-      isValidPassword = password === fallbackPassword
-      console.log('Using plain password, valid:', isValidPassword, 'Expected:', fallbackPassword)
-    }
+    const user = users[0]
+    const isValidPassword = await bcrypt.compare(password, user.password)
 
     if (!isValidPassword) {
-      console.log('Password mismatch')
+      console.log('Database password mismatch')
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 })
     }
 
-    // Generate JWT token
     const token = jwt.sign(
-      { email: ADMIN_EMAIL, role: 'admin' },
+      { id: user.id, email: user.email, role: user.role },
       JWT_SECRET,
       { expiresIn: '24h' }
     )
 
-    console.log('Login successful')
+    console.log('Database login successful')
     return NextResponse.json({
       token,
       user: {
-        email: ADMIN_EMAIL,
-        role: 'admin'
+        id: user.id,
+        email: user.email,
+        role: user.role
       }
     })
   } catch (error) {
