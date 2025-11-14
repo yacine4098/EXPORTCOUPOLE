@@ -12,12 +12,17 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json()
 
+    console.log('Login attempt:', email)
+    console.log('Expected email:', ADMIN_EMAIL)
+    console.log('Has password hash:', !!ADMIN_PASSWORD_HASH)
+
     if (!email || !password) {
       return NextResponse.json({ message: 'Email and password are required' }, { status: 400 })
     }
 
     // Check if email matches admin email from environment variable
     if (email !== ADMIN_EMAIL) {
+      console.log('Email mismatch')
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 })
     }
 
@@ -27,13 +32,16 @@ export async function POST(request: NextRequest) {
     if (ADMIN_PASSWORD_HASH) {
       // Use pre-hashed password from environment variable
       isValidPassword = await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
+      console.log('Using hashed password, valid:', isValidPassword)
     } else {
       // Fallback: allow plain password for development (NOT RECOMMENDED FOR PRODUCTION)
       const fallbackPassword = process.env.ADMIN_PASSWORD || 'admin123'
       isValidPassword = password === fallbackPassword
+      console.log('Using plain password, valid:', isValidPassword, 'Expected:', fallbackPassword)
     }
 
     if (!isValidPassword) {
+      console.log('Password mismatch')
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 })
     }
 
@@ -44,6 +52,7 @@ export async function POST(request: NextRequest) {
       { expiresIn: '24h' }
     )
 
+    console.log('Login successful')
     return NextResponse.json({
       token,
       user: {
