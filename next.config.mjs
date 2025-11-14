@@ -9,12 +9,6 @@ const nextConfig = {
       },
     ],
   },
-  // For Vercel deployment
-  output: 'standalone',
-  // Disable static optimization globally
-  experimental: {
-    dynamicIO: true,
-  },
 }
 
 export default nextConfig
