@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 export const dynamic = 'force-dynamic'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@1000coupole.com'
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH // Pre-hashed password
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,20 +16,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: 'Email and password are required' }, { status: 400 })
     }
 
-    // Get user from database
-    const users: any = await query(
-      'SELECT * FROM users WHERE email = ? AND role = ?',
-      [email, 'admin']
-    )
-
-    if (users.length === 0) {
+    // Check if email matches admin email from environment variable
+    if (email !== ADMIN_EMAIL) {
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 })
     }
 
-    const user = users[0]
-
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password)
+    let isValidPassword = false
+    
+    if (ADMIN_PASSWORD_HASH) {
+      // Use pre-hashed password from environment variable
+      isValidPassword = await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
+    } else {
+      // Fallback: allow plain password for development (NOT RECOMMENDED FOR PRODUCTION)
+      const fallbackPassword = process.env.ADMIN_PASSWORD || 'admin123'
+      isValidPassword = password === fallbackPassword
+    }
 
     if (!isValidPassword) {
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 })
@@ -36,7 +39,7 @@ export async function POST(request: NextRequest) {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { email: ADMIN_EMAIL, role: 'admin' },
       JWT_SECRET,
       { expiresIn: '24h' }
     )
@@ -44,10 +47,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       token,
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role
+        email: ADMIN_EMAIL,
+        role: 'admin'
       }
     })
   } catch (error) {
