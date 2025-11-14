@@ -13,6 +13,7 @@ export default function AddProductPage() {
   const [certifications, setCertifications] = useState<any[]>([])
   
   const [formData, setFormData] = useState({
+    slug: '',
     title_en: '',
     title_fr: '',
     title_ar: '',
@@ -22,7 +23,6 @@ export default function AddProductPage() {
     description_en: '',
     description_fr: '',
     description_ar: '',
-    slug: '',
     featured: false,
     active: true,
   })
@@ -116,9 +116,18 @@ export default function AddProductPage() {
       const data = new FormData()
       
       // Add product data
-      Object.keys(formData).forEach(key => {
-        data.append(key, (formData as any)[key].toString())
-      })
+      data.append('slug', formData.slug)
+      data.append('title_en', formData.title_en)
+      data.append('title_fr', formData.title_fr)
+      data.append('title_ar', formData.title_ar)
+      data.append('category_en', formData.category_en)
+      data.append('category_fr', formData.category_fr)
+      data.append('category_ar', formData.category_ar)
+      data.append('description_en', formData.description_en)
+      data.append('description_fr', formData.description_fr)
+      data.append('description_ar', formData.description_ar)
+      data.append('featured', formData.featured.toString())
+      data.append('active', formData.active.toString())
       
       // Add specifications
       data.append('specifications', JSON.stringify(specifications.filter(s => s.label_en)))
@@ -146,6 +155,7 @@ export default function AddProductPage() {
       })
 
       if (response.ok) {
+        alert('Product created successfully!')
         router.push('/admin/dashboard')
       } else {
         const error = await response.json()
