@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@1000coupole.com'
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH // Pre-hashed password
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD // Pre-hashed password
 
 export async function POST(request: NextRequest) {
   try {
