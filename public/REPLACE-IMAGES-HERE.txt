@@ -1,0 +1,42 @@
+========================================
+  REPLACE THESE IMAGES WITH YOUR OWN
+========================================
+
+Place your custom images in this 'public' folder:
+
+1. LOGO
+   File name: logo.png
+   Recommended size: 200x80px (or similar aspect ratio)
+   Format: PNG (with transparent background) or JPG
+   
+   This logo appears in:
+   - Navigation bar (top of all pages)
+   - Footer (bottom of all pages)
+
+2. HERO IMAGE
+   File name: hero-image.jpg
+   Recommended size: 1920x1080px or larger (for high quality)
+   Format: JPG or PNG
+   
+   This image appears as:
+   - Homepage hero section background
+   - Make sure it's high quality for best appearance
+
+========================================
+HOW TO UPDATE:
+========================================
+
+1. Prepare your logo image:
+   - Save as: logo.png (or logo.jpg)
+   - Place in: d:\algiers-export-hub-main\public\
+
+2. Prepare your hero background image:
+   - Save as: hero-image.jpg (or hero-image.png)
+   - Place in: d:\algiers-export-hub-main\public\
+
+3. Refresh your browser - changes appear immediately!
+
+Note: Images in the 'public' folder are served directly,
+so you can replace them anytime without rebuilding the project.
+
+========================================

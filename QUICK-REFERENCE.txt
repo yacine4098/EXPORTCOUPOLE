@@ -1,0 +1,103 @@
+╭────────────────────────────────────────────────────────────────────╮
+│                   XAMPP SETUP - QUICK REFERENCE                    │
+╰────────────────────────────────────────────────────────────────────╯
+
+📋 SETUP SEQUENCE (Run once):
+
+  1️⃣  Open XAMPP Control Panel → Start MySQL
+  
+  2️⃣  Double-click: 1-configure.bat
+      → Opens server\.env for editing
+      → Set SMTP email credentials
+      → Set admin password
+  
+  3️⃣  Double-click: 2-start-project.bat
+      → Starts backend server
+      → Database auto-created on first run!
+
+╭────────────────────────────────────────────────────────────────────╮
+│                         DAILY USAGE                                │
+╰────────────────────────────────────────────────────────────────────╯
+
+Every time you want to work:
+
+  1. XAMPP Control Panel → Start MySQL ✓
+  2. Run: 2-start-project.bat
+  3. Frontend already running at: http://localhost:8080
+
+╔════════════════════════════════════════════════════════════════════╗
+║                          LINKS                                     ║
+╚════════════════════════════════════════════════════════════════════╝
+
+  🌐 Website:        http://localhost:8080
+  🔧 API:            http://localhost:5000/api
+  📊 Health Check:   http://localhost:5000/api/health
+  🗄️  phpMyAdmin:    http://localhost/phpmyadmin
+
+╔════════════════════════════════════════════════════════════════════╗
+║                      ADMIN ACCESS                                  ║
+╚════════════════════════════════════════════════════════════════════╝
+
+  Email:     admin@1000coupole.com
+  Password:  (see server\.env → ADMIN_PASSWORD)
+
+╔════════════════════════════════════════════════════════════════════╗
+║                    COMMON ISSUES                                   ║
+╚════════════════════════════════════════════════════════════════════╝
+
+  ❌ "Can't connect to MySQL"
+     → Open XAMPP, click Start on MySQL
+     → Check DB_PASSWORD in server\.env (should be empty)
+
+  ❌ "Port 5000 already in use"
+     → Close other backend instances
+     → Or change PORT in server\.env
+
+  ❌ "Database not found"
+     → Database creates automatically - just restart backend
+     → Check XAMPP MySQL is running
+
+  ❌ "Email not sending"
+     → Use Gmail App Password, not regular password
+     → Get it: https://myaccount.google.com/apppasswords
+
+╔════════════════════════════════════════════════════════════════════╗
+║                     FILE LOCATIONS                                 ║
+╚════════════════════════════════════════════════════════════════════╝
+
+  Backend config:  server\.env
+  Frontend code:   src/
+  Backend code:    server/src/
+  Database:        XAMPP\mysql\data\algiers_export_hub\
+  Uploads:         server\uploads\
+
+╔════════════════════════════════════════════════════════════════════╗
+║                    TESTING CHECKLIST                               ║
+╚════════════════════════════════════════════════════════════════════╝
+
+  ✓ Frontend loads without errors
+  ✓ Products page shows items
+  ✓ Contact form submits (check email)
+  ✓ API responds: http://localhost:5000/api/health
+  ✓ Can login to admin panel
+  ✓ Database visible in phpMyAdmin
+
+╔════════════════════════════════════════════════════════════════════╗
+║                   DEPLOYMENT TO SERVER                             ║
+╚════════════════════════════════════════════════════════════════════╝
+
+  When ready to go live, you'll need:
+  
+  ✓ VPS or Cloud Hosting (not shared hosting)
+  ✓ Domain name
+  ✓ SSL Certificate (free with Let's Encrypt)
+  
+  Services that work well:
+  • DigitalOcean VPS
+  • Railway.app (easiest)
+  • Render.com
+  • AWS / Azure
+
+════════════════════════════════════════════════════════════════════
+
+Need help? Check XAMPP-SETUP.md for detailed instructions.

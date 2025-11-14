@@ -1,0 +1,93 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+.next
+
+# Production
+/build
+/dist
+dist/
+dist.zip
+server.zip
+
+# Vite
+dist-vite/
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Local env files
+.env
+.env*.local
+.env.production
+server/.env
+server/.env.production
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+server/uploads/*
+!server/uploads/.gitkeep
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+logs
+*.log
+
+# Lock files (keep package-lock.json, remove others)
+bun.lockb
+yarn.lock
+
+# Batch files with sensitive data
+# Keep example files, ignore actual config
+*.bat
+!*-example.bat
+
+# Test files
+test-admin.html
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Build artifacts
+*.zip
+*.tar.gz
+*.rar

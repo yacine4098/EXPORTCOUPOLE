@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteBase /
+
+# Handle React Router - must come first
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/api
+RewriteRule ^(.*)$ index.html [L]
