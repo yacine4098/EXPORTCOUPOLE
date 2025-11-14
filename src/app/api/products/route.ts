@@ -14,8 +14,11 @@ export async function GET(request: NextRequest) {
     let sql = `SELECT 
       p.id, p.slug, p.featured, p.active,
       p.title_${lang} as title,
+      p.title_en, p.title_fr, p.title_ar,
       p.category_${lang} as category,
+      p.category_en, p.category_fr, p.category_ar,
       p.description_${lang} as description,
+      p.description_en, p.description_fr, p.description_ar,
       p.created_at, p.updated_at
     FROM products p
     WHERE p.active = 1`
@@ -45,6 +48,20 @@ export async function GET(request: NextRequest) {
         [product.id]
       )
       product.image = images.length > 0 ? `${baseUrl}${images[0].image_url}` : null
+      
+      // Get specifications
+      const specs: any = await query(
+        `SELECT label_${lang} as label, value_${lang} as value FROM product_specifications WHERE product_id = ? ORDER BY spec_order`,
+        [product.id]
+      )
+      product.specifications = specs
+
+      // Get packaging
+      const packaging: any = await query(
+        `SELECT label_${lang} as label, value_${lang} as value FROM product_packaging WHERE product_id = ? ORDER BY pack_order`,
+        [product.id]
+      )
+      product.packaging = packaging
     }
 
     return NextResponse.json(products)
