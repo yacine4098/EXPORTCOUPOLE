@@ -34,8 +34,10 @@
     "src/pages",
     "src/main.tsx",
     "src/App.tsx",
+    "src/**/*.old",
     "vite.config.ts",
     "server",
-    "src/data"
+    "src/data",
+    "src/assets"
   ]
 }
