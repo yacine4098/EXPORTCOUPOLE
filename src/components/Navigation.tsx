@@ -4,17 +4,14 @@ import { useState } from "react"
 import Link from "next/link"
 import { Menu, X, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [currentLang, setCurrentLang] = useState('en')
+  const { language, setLanguage, t } = useLanguage()
 
-  const changeLanguage = (lang: string) => {
-    setCurrentLang(lang)
-    // Store language preference
-    localStorage.setItem('language', lang)
-    // Reload to apply language (you can implement this better with context later)
-    window.location.reload()
+  const changeLanguage = (lang: 'en' | 'fr' | 'ar') => {
+    setLanguage(lang)
   }
 
   const languageLabels: { [key: string]: string } = {
@@ -35,26 +32,26 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <Link href="/" className="text-foreground hover:text-primary transition-colors font-medium">
-              Home
+              {t('nav.home')}
             </Link>
             <Link href="/about" className="text-foreground hover:text-primary transition-colors font-medium">
-              About
+              {t('nav.about')}
             </Link>
             <Link href="/products" className="text-foreground hover:text-primary transition-colors font-medium">
-              Products
+              {t('nav.products')}
             </Link>
             <Link href="/quality" className="text-foreground hover:text-primary transition-colors font-medium">
-              Quality
+              {t('nav.quality')}
             </Link>
             <Link href="/contact" className="text-foreground hover:text-primary transition-colors font-medium">
-              Contact
+              {t('nav.contact')}
             </Link>
             
             {/* Language Switcher */}
             <div className="relative group">
               <Button variant="default" size="sm" className="gap-2">
                 <Globe className="w-4 h-4" />
-                {languageLabels[currentLang]}
+                {languageLabels[language]}
               </Button>
               <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <button
@@ -97,35 +94,35 @@ const Navigation = () => {
                 className="text-foreground hover:text-primary transition-colors font-medium py-2"
                 onClick={() => setIsOpen(false)}
               >
-                Home
+                {t('nav.home')}
               </Link>
               <Link
                 href="/about"
                 className="text-foreground hover:text-primary transition-colors font-medium py-2"
                 onClick={() => setIsOpen(false)}
               >
-                About
+                {t('nav.about')}
               </Link>
               <Link
                 href="/products"
                 className="text-foreground hover:text-primary transition-colors font-medium py-2"
                 onClick={() => setIsOpen(false)}
               >
-                Products
+                {t('nav.products')}
               </Link>
               <Link
                 href="/quality"
                 className="text-foreground hover:text-primary transition-colors font-medium py-2"
                 onClick={() => setIsOpen(false)}
               >
-                Quality
+                {t('nav.quality')}
               </Link>
               <Link
                 href="/contact"
                 className="text-foreground hover:text-primary transition-colors font-medium py-2"
                 onClick={() => setIsOpen(false)}
               >
-                Contact
+                {t('nav.contact')}
               </Link>
               
               {/* Mobile Language Switcher */}
@@ -135,7 +132,7 @@ const Navigation = () => {
                   <button
                     onClick={() => changeLanguage('en')}
                     className={`px-3 py-1 rounded ${
-                      currentLang === 'en' ? 'bg-primary text-white' : 'bg-gray-100'
+                      language === 'en' ? 'bg-primary text-white' : 'bg-gray-100'
                     }`}
                   >
                     🇬🇧 EN
@@ -143,7 +140,7 @@ const Navigation = () => {
                   <button
                     onClick={() => changeLanguage('fr')}
                     className={`px-3 py-1 rounded ${
-                      currentLang === 'fr' ? 'bg-primary text-white' : 'bg-gray-100'
+                      language === 'fr' ? 'bg-primary text-white' : 'bg-gray-100'
                     }`}
                   >
                     🇫🇷 FR
@@ -151,7 +148,7 @@ const Navigation = () => {
                   <button
                     onClick={() => changeLanguage('ar')}
                     className={`px-3 py-1 rounded ${
-                      currentLang === 'ar' ? 'bg-primary text-white' : 'bg-gray-100'
+                      language === 'ar' ? 'bg-primary text-white' : 'bg-gray-100'
                     }`}
                   >
                     🇩🇿 AR
