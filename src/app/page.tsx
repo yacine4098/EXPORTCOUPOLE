@@ -1,7 +1,7 @@
 'use client'
 
-import Navigation from "@/components/NavigationNext"
-import Footer from "@/components/FooterNext"
+import Navigation from "@/components/Navigation"
+import Footer from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Star, Globe, Award } from "lucide-react"
 import Link from "next/link"
