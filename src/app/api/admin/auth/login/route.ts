@@ -8,7 +8,6 @@ export const dynamic = 'force-dynamic'
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,33 +22,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Try environment variables first (if set)
-    if (ADMIN_EMAIL && (ADMIN_PASSWORD || ADMIN_PASSWORD_HASH)) {
+    if (ADMIN_EMAIL && ADMIN_PASSWORD) {
       console.log('Trying ENV authentication')
       
-      if (email === ADMIN_EMAIL) {
-        let isValidPassword = false
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        const token = jwt.sign(
+          { email: ADMIN_EMAIL, role: 'admin' },
+          JWT_SECRET,
+          { expiresIn: '24h' }
+        )
         
-        if (ADMIN_PASSWORD_HASH) {
-          isValidPassword = await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
-          console.log('ENV hashed password valid:', isValidPassword)
-        } else if (ADMIN_PASSWORD) {
-          isValidPassword = password === ADMIN_PASSWORD
-          console.log('ENV plain password valid:', isValidPassword)
-        }
-        
-        if (isValidPassword) {
-          const token = jwt.sign(
-            { email: ADMIN_EMAIL, role: 'admin' },
-            JWT_SECRET,
-            { expiresIn: '24h' }
-          )
-          
-          console.log('ENV Login successful')
-          return NextResponse.json({
-            token,
-            user: { email: ADMIN_EMAIL, role: 'admin' }
-          })
-        }
+        console.log('ENV Login successful')
+        return NextResponse.json({
+          token,
+          user: { email: ADMIN_EMAIL, role: 'admin' }
+        })
       }
     }
 
